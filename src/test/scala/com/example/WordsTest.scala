@@ -13,7 +13,6 @@ class WordsTest extends AnyFunSuiteLike {
     assert(processedWords.sortedListOfWordWithOddCounts.sorted == List(("a", 1), ("hello", 5), ("world", 5)).sorted)
   }
 
-  // TODO Fix this
   test("toProcessedWords should handle empty string") {
     val words = Words("")
     val processedWords = words.toProcessedWords
