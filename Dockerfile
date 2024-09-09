@@ -4,8 +4,6 @@ WORKDIR /app/amberdata
 
 COPY build.sbt /app/amberdata/
 
-COPY project /app/amberdata/project
-
 COPY src /app/amberdata/src
 
 COPY resources /app/amberdata/resources
