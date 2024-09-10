@@ -1,28 +1,30 @@
 package com.example
 
-import upickle.default.*
 import com.typesafe.scalalogging.LazyLogging
+import upickle.default.*
 
 case class Words(words: String) extends LazyLogging derives ReadWriter {
-  def toProcessedWords: Option[ProcessedWords] = {
-    if (words == "") {
+  def toProcessedWords: Option[ProcessedWords] = words match
+    case w if w.isEmpty =>
       logger.error("Word value is empty")
       None
-    }
-    else {
+    case _ =>
       val listOfWords = words.split(" ")
-      val wordCharacterCount = listOfWords.map(characterCount)
+      val wordCharacterCount = listOfWords.map { w =>
+        characterCountLogger(w)
+        w.length
+      }
       val mapOfWords = (listOfWords zip wordCharacterCount).toMap
-      val sortedWords = mapOfWords.filter(_._1.length % 2 == 1).toList.sortBy(_._2)
-      sortedWords.foreach(l => logger.info(s"Odd character words sorted in ascending order: $l"))
+      val sortedWords = mapOfWords.filter { case (word, _) => word.length % 2 == 1 }.toList.sortBy(_._2)
+      sortedWords.foreach(sortedWordLogger)
       Some(ProcessedWords(rawWords = words, mapOfWords = mapOfWords, sortedListOfWordWithOddCounts = sortedWords))
-    }
+
+  def characterCountLogger(word: String): Unit = word.length match {
+    case wordLen if wordLen % 2 == 1 => logger.info(s"Word: $word, with odd character count: ${word.length}")
+    case _ => logger.info(s"Word: $word, Character count: ${word.length}")
   }
 
-  def characterCount(word: String): Int = {
-    val charCount = word.length
-    logger.info(s"Word: $word, Character count: $charCount")
-    if (charCount % 2 == 1) logger.info(s"Word: $word, with odd character count: $charCount")
-    charCount
+  def sortedWordLogger(sortedWord: (String, Int)): Unit = {
+    logger.info(s"Odd character words sorted in ascending order: $sortedWord")
   }
 }

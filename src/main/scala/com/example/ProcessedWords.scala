@@ -8,10 +8,9 @@ object ProcessedWords {
       key.trim -> value
     }
 
-    if (validatedMap.keys.forall(_.nonEmpty)) { // Additional check for empty keys after trimming
-      Some(new ProcessedWords(rawWords, validatedMap, sortedListOfWordWithOddCounts))
-    } else {
-      None // Validation failed
+    validatedMap.keys.forall(_.nonEmpty) match {
+      case true => Some(new ProcessedWords(rawWords, validatedMap, sortedListOfWordWithOddCounts))
+      case false => None // Validation failed
     }
   }
 }
