@@ -9,7 +9,7 @@ case class Words(words: String) extends LazyLogging derives ReadWriter {
       logger.error("Word value is empty")
       None
     case _ =>
-      val listOfWords = words.split(" ")
+      val listOfWords = words.split("\\s+")
       val wordCharacterCount = listOfWords.map { w =>
         characterCountLogger(w)
         w.length
